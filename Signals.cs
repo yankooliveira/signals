@@ -52,10 +52,11 @@ namespace deVoid.Utils
         public static SType Get<SType>() where SType : ISignal, new()
         {
             Type signalType = typeof(SType);
+            ISignal signal;
 
-            if (signals.ContainsKey(signalType))
+            if (signals.TryGetValue (signalType, out signal)) 
             {
-                return (SType)signals[signalType];
+                return (SType)signal;
             }
 
             return (SType)Bind(signalType);
@@ -95,13 +96,14 @@ namespace deVoid.Utils
 
         private static ISignal Bind(Type signalType)
         {
-            if (signals.ContainsKey(signalType))
+            ISignal signal;
+            if(signals.TryGetValue(signalType, out signal))
             {
                 UnityEngine.Debug.LogError(string.Format("Signal already registered for type {0}", signalType.ToString()));
-                return signals[signalType];
+                return signal;
             }
 
-            var signal = (ISignal)Activator.CreateInstance(signalType);
+            signal = (ISignal)Activator.CreateInstance(signalType);
             signals.Add(signalType, signal);
             return signal;
         }
