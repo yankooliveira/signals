@@ -28,5 +28,11 @@ Signals.Get<ScoreSignal>().Dispatch(playerName, playerScore);
 ```c#
 Signals.Get<ScoreSignal>().RemoveListener(OnScore);
 ```
+5) You also have your local Signal Hub that is specific to a given object instead of using the global one. The syntax is exactly the same.
+```c#
+SignalHub playerSignals = new SignalHub();
+playerSignals.Get<ScoreSignal>().Dispatch(playerName, playerScore);
+```
+
 
 Hit me up on [twitter](https://twitter.com/yankooliveira) for any suggestions or questions.
