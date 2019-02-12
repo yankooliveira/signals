@@ -1,10 +1,10 @@
-// ===================================================================================
+// ========================================================================================
 // Signals - A typesafe, lightweight messaging lib for Unity.
-// ===================================================================================
-// 2017, Yanko Oliveira  / http://yankooliveira.com / http://twitter.com/yankooliveira
+// ========================================================================================
+// 2017-2019, Yanko Oliveira  / http://yankooliveira.com / http://twitter.com/yankooliveira
 // Special thanks to Max Knoblich for code review and Aswhin Sudhir for the anonymous 
 // function asserts suggestion.
-// ===================================================================================
+// ========================================================================================
 // Inspired by StrangeIOC, minus the clutter.
 // Based on http://wiki.unity3d.com/index.php/CSharpMessenger_Extended
 // Converted to use strongly typed parameters and prevent use of strings as ids.
@@ -20,9 +20,10 @@
 //          Signals.Get<ScoreSignal>().Dispatch(userScore);
 //    4) Don't forget to remove the listeners upon destruction! Eg on OnDestroy():
 //          Signals.Get<ScoreSignal>().RemoveListener(OnScore);
+//    5) If you don't want to use global Signals, you can have your very own SignalHub
+//       instance in your class
 //
-//
-// ===================================================================================
+// ========================================================================================
 
 using System;
 using System.Collections.Generic;
@@ -38,18 +39,42 @@ namespace deVoid.Utils
     }
 
     /// <summary>
-    /// Signals main facade class
+    /// Signals main facade class for global, game-wide signals
     /// </summary>
-    public class Signals
+    public static class Signals
     {
-        private static Dictionary<Type, ISignal> signals = new Dictionary<Type, ISignal>();
+        public static SignalHub hub = new SignalHub();
+
+        public static SType Get<SType>() where SType : ISignal, new()
+        {
+            return hub.Get<SType>();
+        }
+
+        public static void AddListenerToHash(string signalHash, Action handler)
+        {
+            hub.AddListenerToHash(signalHash, handler);
+        }
+
+        public static void RemoveListenerFromHash(string signalHash, Action handler)
+        {
+            hub.RemoveListenerFromHash(signalHash, handler);
+        }
+
+    }
+
+    /// <summary>
+    /// A hub for Signals you can implement in your classes
+    /// </summary>
+    public class SignalHub
+    {
+        private Dictionary<Type, ISignal> signals = new Dictionary<Type, ISignal>();
 
         /// <summary>
         /// Getter for a signal of a given type
         /// </summary>
         /// <typeparam name="SType">Type of signal</typeparam>
         /// <returns>The proper signal binding</returns>
-        public static SType Get<SType>() where SType : ISignal, new()
+        public SType Get<SType>() where SType : ISignal, new()
         {
             Type signalType = typeof(SType);
             ISignal signal;
@@ -69,7 +94,7 @@ namespace deVoid.Utils
         /// </summary>
         /// <param name="signalHash">Unique hash for signal</param>
         /// <param name="handler">Callback for signal listener</param>
-        public static void AddListenerToHash(string signalHash, Action handler)
+        public void AddListenerToHash(string signalHash, Action handler)
         {
             ISignal signal = GetSignalByHash(signalHash);
             if(signal != null && signal is ASignal)
@@ -85,7 +110,7 @@ namespace deVoid.Utils
         /// </summary>
         /// <param name="signalHash">Unique hash for signal</param>
         /// <param name="handler">Callback for signal listener</param>
-        public static void RemoveListenerFromHash(string signalHash, Action handler)
+        public void RemoveListenerFromHash(string signalHash, Action handler)
         {
             ISignal signal = GetSignalByHash(signalHash);
             if (signal != null && signal is ASignal)
@@ -94,7 +119,7 @@ namespace deVoid.Utils
             }
         }
 
-        private static ISignal Bind(Type signalType)
+        private ISignal Bind(Type signalType)
         {
             ISignal signal;
             if(signals.TryGetValue(signalType, out signal))
@@ -108,12 +133,12 @@ namespace deVoid.Utils
             return signal;
         }
 
-        private static ISignal Bind<T>() where T : ISignal, new()
+        private ISignal Bind<T>() where T : ISignal, new()
         {
             return Bind(typeof(T));
         }
 
-        private static ISignal GetSignalByHash(string signalHash)
+        private ISignal GetSignalByHash(string signalHash)
         {
             foreach (ISignal signal in signals.Values)
             {
@@ -320,4 +345,3 @@ namespace deVoid.Utils
         }
     }
 }
-
