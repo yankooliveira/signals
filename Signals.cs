@@ -43,7 +43,7 @@ namespace deVoid.Utils
     /// </summary>
     public static class Signals
     {
-        public static SignalHub hub = new SignalHub();
+        private static readonly SignalHub hub = new SignalHub();
 
         public static SType Get<SType>() where SType : ISignal, new()
         {
