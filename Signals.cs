@@ -209,10 +209,7 @@ namespace deVoid.Utils
         /// </summary>
         public void Dispatch()
         {
-            if(callback != null)
-            {
-                callback();
-            }
+            callback?.Invoke();
         }
     }
 
@@ -251,10 +248,7 @@ namespace deVoid.Utils
         /// </summary>
         public void Dispatch(T arg1)
         {
-            if (callback != null)
-            {
-                callback(arg1);
-            }
+            callback?.Invoke(arg1);
         }
     }
 
@@ -294,10 +288,7 @@ namespace deVoid.Utils
         /// </summary>
         public void Dispatch(T arg1, U arg2)
         {
-            if (callback != null)
-            {
-                callback(arg1, arg2);
-            }
+            callback?.Invoke(arg1, arg2);
         }
     }
 
@@ -338,10 +329,7 @@ namespace deVoid.Utils
         /// </summary>
         public void Dispatch(T arg1, U arg2, V arg3)
         {
-            if (callback != null)
-            {
-                callback(arg1, arg2, arg3);
-            }
+            callback?.Invoke(arg1, arg2, arg3);
         }
     }
 }
