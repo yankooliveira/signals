@@ -205,6 +205,14 @@ namespace deVoid.Utils
         }
 
         /// <summary>
+        /// Removes all listeners from this Signal
+        /// </summary>
+        public void RemoveAllListeners()
+        {
+            callback = null;
+        }
+
+        /// <summary>
         /// Dispatch this signal
         /// </summary>
         public void Dispatch()
@@ -241,6 +249,14 @@ namespace deVoid.Utils
         public void RemoveListener(Action<T> handler)
         {
             callback -= handler;
+        }
+
+        /// <summary>
+        /// Removes all listeners from this Signal
+        /// </summary>
+        public void RemoveAllListeners()
+        {
+            callback = null;
         }
 
         /// <summary>
@@ -284,6 +300,14 @@ namespace deVoid.Utils
         }
 
         /// <summary>
+        /// Removes all listeners from this Signal
+        /// </summary>
+        public void RemoveAllListeners()
+        {
+            callback = null;
+        }
+
+        /// <summary>
         /// Dispatch this signal
         /// </summary>
         public void Dispatch(T arg1, U arg2)
@@ -322,6 +346,14 @@ namespace deVoid.Utils
         public void RemoveListener(Action<T, U, V> handler)
         {
             callback -= handler;
+        }
+
+        /// <summary>
+        /// Removes all listeners from this Signal
+        /// </summary>
+        public void RemoveAllListeners()
+        {
+            callback = null;
         }
 
         /// <summary>
